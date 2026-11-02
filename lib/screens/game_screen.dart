@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../audio.dart';
 import '../game_logic.dart';
 import '../ranking_store.dart';
 import '../strings.dart';
@@ -64,9 +65,11 @@ class _GameScreenState extends State<GameScreen> {
 
     switch (result) {
       case GuessResult.tooHigh:
+        AppAudio.instance.hint();
         setState(() => _hint = s.tooHigh);
         break;
       case GuessResult.tooLow:
+        AppAudio.instance.hint();
         setState(() => _hint = s.tooLow);
         break;
       case GuessResult.outside:
@@ -143,6 +146,16 @@ class _GameScreenState extends State<GameScreen> {
         appBar: AppBar(
           title: Text('${s.appName} - ${s.levelName(_levelId)}'),
           backgroundColor: Colors.transparent,
+          actions: [
+            ValueListenableBuilder<bool>(
+              valueListenable: AppAudio.instance.muted,
+              builder: (_, muted, __) => IconButton(
+                tooltip: muted ? s.soundOn : s.soundOff,
+                icon: Icon(muted ? Icons.volume_off : Icons.volume_up),
+                onPressed: () => AppAudio.instance.toggleMute(),
+              ),
+            ),
+          ],
         ),
         body: SafeArea(
           child: SingleChildScrollView(
@@ -169,7 +182,7 @@ class _GameScreenState extends State<GameScreen> {
                   child: Text(_hint,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
-                          fontSize: 18, color: Color(0xFFFFE0B2))),
+                          fontSize: 18, color: Color(0xFFB3E5FC))),
                 ),
                 TextField(
                   controller: _input,
