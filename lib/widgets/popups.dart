@@ -1,15 +1,17 @@
 import 'dart:math';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
+import '../audio.dart';
 import '../strings.dart';
 
 // Pop-up de penalidade: chute fora do intervalo
 Future<void> showPenaltyPopup(BuildContext context) {
   final s = S.of(context);
+  AppAudio.instance.penalty();
   return showDialog<void>(
     context: context,
     builder: (ctx) => AlertDialog(
-      backgroundColor: const Color(0xFF8A5A00),
+      backgroundColor: const Color(0xFF3B3F9E),
       title: Text('⚠️ ${s.penaltyTitle}'),
       content: Text(s.penaltyBody),
       actions: [
@@ -23,11 +25,12 @@ Future<void> showPenaltyPopup(BuildContext context) {
 // Pop-up de game over
 Future<String?> showGameOverPopup(BuildContext context, int secret) {
   final s = S.of(context);
+  AppAudio.instance.fail();
   return showDialog<String>(
     context: context,
     barrierDismissible: false,
     builder: (ctx) => AlertDialog(
-      backgroundColor: const Color(0xFF7A1F1F),
+      backgroundColor: const Color(0xFF4A2A6B),
       title: Text('💥 ${s.gameOverTitle}'),
       content: Text(s.gameOverBody(secret)),
       actions: [
@@ -82,6 +85,7 @@ class _WinDialogState extends State<_WinDialog> {
   @override
   void initState() {
     super.initState();
+    AppAudio.instance.success();
     _left.play();
     _right.play();
   }
