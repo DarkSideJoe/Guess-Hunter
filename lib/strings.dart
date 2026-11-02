@@ -40,6 +40,15 @@ class S {
   String get yes => pt ? 'Sim' : 'Yes';
   String get no => pt ? 'Não' : 'No';
 
+  // Créditos e som
+  String get credits => pt ? 'Créditos' : 'Credits';
+  String get createdBy => pt ? 'Criado por' : 'Created by';
+  String get author => 'Joe Karv';
+  String get version => pt ? 'Versão 1.0.0' : 'Version 1.0.0';
+  String get close => pt ? 'Fechar' : 'Close';
+  String get soundOn => pt ? 'Ligar som' : 'Sound on';
+  String get soundOff => pt ? 'Desligar som' : 'Sound off';
+
   String levelName(String id) {
     switch (id) {
       case 'easy': return pt ? 'Fácil' : 'Easy';
