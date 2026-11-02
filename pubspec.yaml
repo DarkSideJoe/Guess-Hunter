@@ -23,3 +23,5 @@ flutter:
     - family: TitanOne
       fonts:
         - asset: Assets/fonts/TitanOne-Regular.ttf
+        - asset: Assets/fonts/TitanOne-Regular.ttf
+          weight: 700
