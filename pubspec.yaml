@@ -18,8 +18,8 @@ dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/audio/
+    - Assets/Audio/
   fonts:
     - family: TitanOne
       fonts:
-        - asset: assets/fonts/TitanOne-Regular.ttf
+        - asset: Assets/fonts/TitanOne-Regular.ttf
