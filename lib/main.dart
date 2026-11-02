@@ -1,24 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'audio.dart';
 import 'screens/home_screen.dart';
 
-void main() => runApp(const GuessHunterApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await AppAudio.instance.init();
+  runApp(const GuessHunterApp());
+}
 
 class GuessHunterApp extends StatelessWidget {
   const GuessHunterApp({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final scheme = ColorScheme.fromSeed(
+      seedColor: const Color(0xFF3FA9F5),
+      brightness: Brightness.dark,
+    ).copyWith(
+      primary: const Color(0xFF3FA9F5),
+      onPrimary: const Color(0xFF0B1F4B),
+    );
+
     return MaterialApp(
       title: 'Guess Hunter',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,
+        fontFamily: 'TitanOne',
         scaffoldBackgroundColor: const Color(0xFF0B1F4B),
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFFFF8A00),
-          brightness: Brightness.dark,
-        ),
+        colorScheme: scheme,
         useMaterial3: true,
       ),
       localizationsDelegates: const [
