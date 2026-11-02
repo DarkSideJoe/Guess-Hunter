@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../audio.dart';
 import '../game_logic.dart';
 import '../ranking_store.dart';
 import '../strings.dart';
@@ -17,6 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    AppAudio.instance.startMusic();
     RankingStore.lastName().then((n) {
       if (mounted) setState(() => _name.text = n);
     });
@@ -43,6 +45,35 @@ class _HomeScreenState extends State<HomeScreen> {
     ));
   }
 
+  void _showCredits() {
+    final s = S.of(context);
+    showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(s.credits, textAlign: TextAlign.center),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(s.appName,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 28, color: Color(0xFF3FA9F5))),
+            const SizedBox(height: 16),
+            Text(s.createdBy,
+                style: const TextStyle(fontSize: 16, color: Color(0xFF9FD3FF))),
+            Text(s.author, style: const TextStyle(fontSize: 26)),
+            const SizedBox(height: 16),
+            Text(s.version,
+                style: const TextStyle(fontSize: 14, color: Color(0xFF9FD3FF))),
+          ],
+        ),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.of(ctx).pop(), child: Text(s.close)),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
@@ -56,6 +87,21 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Text(s.appName),
         backgroundColor: Colors.transparent,
+        actions: [
+          ValueListenableBuilder<bool>(
+            valueListenable: AppAudio.instance.muted,
+            builder: (_, muted, __) => IconButton(
+              tooltip: muted ? s.soundOn : s.soundOff,
+              icon: Icon(muted ? Icons.volume_off : Icons.volume_up),
+              onPressed: () => AppAudio.instance.toggleMute(),
+            ),
+          ),
+          IconButton(
+            tooltip: s.credits,
+            icon: const Icon(Icons.info_outline),
+            onPressed: _showCredits,
+          ),
+        ],
       ),
       body: SafeArea(
         child: Padding(
