@@ -86,28 +86,32 @@ class _GameScreenState extends State<GameScreen> {
         setState(() {});
         _ticker?.cancel();
 
-        // 1°: Mostra a tela de record primeiro
         final score = game.score();
         final pos = await RankingStore.add(_levelId, widget.playerName, score);
         if (!mounted) return;
-        final choice = await showWinPopup(context,
+
+        // 1. Tela de resultado com OK circular (música de vitória toca aqui)
+        await showResultPopup(context,
             secret: game.secret,
             used: game.attemptsUsed,
             secs: game.seconds,
             score: score,
             position: pos);
+        if (!mounted) return;
 
-        // 2°: Depois pede para gravar o nome (se o jogador quiser)
-        if (choice == 'again' || choice == 'home' || choice == 'ranking') {
-          _handleChoice(choice);
-        } else {
-          // Se não escolheu nenhuma ação específica, pergunta o nome
+        // 2. Se bateu recorde, grava o nome (música de vitória também toca)
+        if (pos > 0) {
           final nomeDigitado = await showNameInputPopup(context);
           final nomeFinal = (nomeDigitado != null && nomeDigitado.isNotEmpty)
               ? nomeDigitado
               : 'Anônimo';
           await RankingStore.saveName(nomeFinal);
+          if (!mounted) return;
         }
+
+        // 3. Tela com opções (novo jogo, ranking, home)
+        final choice = await showOptionsPopup(context);
+        _handleChoice(choice);
         break;
     }
   }
@@ -156,7 +160,6 @@ class _GameScreenState extends State<GameScreen> {
         if (ok && mounted) Navigator.of(context).pop();
       },
       child: Scaffold(
-        // resizeToAvoidBottomInset evita que o teclado quebre a área do jogo
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
           title: Text('${s.appName} - ${s.levelName(_levelId)}'),
@@ -221,7 +224,6 @@ class _GameScreenState extends State<GameScreen> {
                       ),
                     ),
                     const SizedBox(width: 12),
-                    // Botão confirmar menor e arredondado (círculo)
                     SizedBox(
                       width: 56,
                       height: 56,
