@@ -13,7 +13,7 @@ class RankEntry {
 }
 
 class RankingStore {
-  static const int maxEntries = 5;
+  static const int maxEntries = 10;
 
   static Future<List<RankEntry>> load(String levelId) async {
     final prefs = await SharedPreferences.getInstance();
@@ -25,7 +25,7 @@ class RankingStore {
     return list;
   }
 
-  // Devolve a posição (1 a 5) ou 0 se não entrou no top
+  // Devolve a posição (1 a 10) ou 0 se não entrou no top
   static Future<int> add(String levelId, String name, int points) async {
     final prefs = await SharedPreferences.getInstance();
     final list = await load(levelId);
