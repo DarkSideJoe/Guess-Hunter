@@ -19,7 +19,15 @@ class GameLogo extends StatelessWidget {
       errorBuilder: (_, __, ___) => Text(
         s.appName,
         textAlign: TextAlign.center,
-        style: TextStyle(fontSize: width / 8, color: Colors.white),
+        style: TextStyle(
+          fontSize: width / 8,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+          foreground: Paint()
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 3
+            ..color = Colors.redAccent,
+        ),
       ),
     );
   }
