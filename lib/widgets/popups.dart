@@ -45,6 +45,65 @@ Future<String?> showGameOverPopup(BuildContext context, int secret) {
   );
 }
 
+// Pop-up para digitar o nome quando bater um recorde (campo começa vazio)
+// OK só habilita com pelo menos 2 caracteres; tem botão Cancelar para não gravar
+Future<String?> showNameInputPopup(BuildContext context) {
+  final s = S.of(context);
+  final controller = TextEditingController(); // começa sempre vazio
+  return showDialog<String>(
+    context: context,
+    barrierDismissible: false,
+    builder: (ctx) => StatefulBuilder(
+      builder: (ctx, setState) {
+        final nome = controller.text.trim();
+        final podeConfirmar = nome.length >= 2;
+
+        return AlertDialog(
+          backgroundColor: const Color(0xFF3B3F9E),
+          title: Text('🏆 Novo recorde!'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(s.nameRequired),
+              const SizedBox(height: 12),
+              TextField(
+                controller: controller,
+                maxLength: 16,
+                autofocus: true,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 20),
+                decoration: InputDecoration(
+                  hintText: s.nameHint,
+                  border: const OutlineInputBorder(),
+                  counterText: '',
+                ),
+                onChanged: (_) => setState(() {}),
+              ),
+              if (nome.isNotEmpty && nome.length < 2)
+                const Text(
+                  'Digite pelo menos 2 letras.',
+                  style: TextStyle(fontSize: 12, color: Colors.redAccent),
+                ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(null), // não grava
+              child: Text('Cancelar'),
+            ),
+            FilledButton(
+              onPressed: podeConfirmar
+                  ? () => Navigator.of(ctx).pop(controller.text.trim())
+                  : null,
+              child: Text(s.ok),
+            ),
+          ],
+        );
+      },
+    ),
+  );
+}
+
 // Pop-up de vitória com fogos (confete)
 Future<String?> showWinPopup(BuildContext context,
     {required int secret,
