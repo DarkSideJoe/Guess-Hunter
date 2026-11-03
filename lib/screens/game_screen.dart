@@ -86,14 +86,9 @@ class _GameScreenState extends State<GameScreen> {
         setState(() {});
         _ticker?.cancel();
 
-        // Popup para digitar o nome do recorde (campo começa vazio)
-        final nomeDigitado = await showNameInputPopup(context);
-        final nomeFinal = (nomeDigitado != null && nomeDigitado.isNotEmpty)
-            ? nomeDigitado
-            : 'Anônimo';
-
+        // 1°: Mostra a tela de record primeiro
         final score = game.score();
-        final pos = await RankingStore.add(_levelId, nomeFinal, score);
+        final pos = await RankingStore.add(_levelId, widget.playerName, score);
         if (!mounted) return;
         final choice = await showWinPopup(context,
             secret: game.secret,
@@ -101,7 +96,18 @@ class _GameScreenState extends State<GameScreen> {
             secs: game.seconds,
             score: score,
             position: pos);
-        _handleChoice(choice);
+
+        // 2°: Depois pede para gravar o nome (se o jogador quiser)
+        if (choice == 'again' || choice == 'home' || choice == 'ranking') {
+          _handleChoice(choice);
+        } else {
+          // Se não escolheu nenhuma ação específica, pergunta o nome
+          final nomeDigitado = await showNameInputPopup(context);
+          final nomeFinal = (nomeDigitado != null && nomeDigitado.isNotEmpty)
+              ? nomeDigitado
+              : 'Anônimo';
+          await RankingStore.saveName(nomeFinal);
+        }
         break;
     }
   }
@@ -150,6 +156,8 @@ class _GameScreenState extends State<GameScreen> {
         if (ok && mounted) Navigator.of(context).pop();
       },
       child: Scaffold(
+        // resizeToAvoidBottomInset evita que o teclado quebre a área do jogo
+        resizeToAvoidBottomInset: true,
         appBar: AppBar(
           title: Text('${s.appName} - ${s.levelName(_levelId)}'),
           backgroundColor: Colors.transparent,
@@ -213,14 +221,20 @@ class _GameScreenState extends State<GameScreen> {
                       ),
                     ),
                     const SizedBox(width: 12),
-                    Flexible(
-                      flex: 1,
+                    // Botão confirmar menor e arredondado (círculo)
+                    SizedBox(
+                      width: 56,
+                      height: 56,
                       child: FilledButton(
                         onPressed: _submit,
-                        child: Padding(
-                          padding: const EdgeInsets.all(14),
-                          child: Text(s.guessButton,
-                              style: const TextStyle(fontSize: 22)),
+                        style: FilledButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          shape: const CircleBorder(),
+                          minimumSize: const Size(56, 56),
+                        ),
+                        child: const Icon(
+                          Icons.send,
+                          size: 24,
                         ),
                       ),
                     ),
