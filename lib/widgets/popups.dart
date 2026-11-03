@@ -46,10 +46,11 @@ Future<String?> showGameOverPopup(BuildContext context, int secret) {
 }
 
 // Pop-up para digitar o nome quando bater um recorde (campo começa vazio)
-// OK só habilita com pelo menos 2 caracteres; tem botão Cancelar para não gravar
+// Toca música de vitória também
 Future<String?> showNameInputPopup(BuildContext context) {
   final s = S.of(context);
   final controller = TextEditingController(); // começa sempre vazio
+  AppAudio.instance.success(); // música de vitória nesta tela
   return showDialog<String>(
     context: context,
     barrierDismissible: false,
@@ -104,7 +105,153 @@ Future<String?> showNameInputPopup(BuildContext context) {
   );
 }
 
-// Pop-up de vitória com fogos (confete)
+// Pop-up de resultado com OK circular (música de vitória já tocou ao abrir)
+Future<void> showResultPopup(BuildContext context,
+    {required int secret,
+    required int used,
+    required int secs,
+    required int score,
+    required int position}) {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false,
+    builder: (_) => _ResultDialog(
+        secret: secret, used: used, secs: secs, score: score, position: position),
+  );
+}
+
+class _ResultDialog extends StatefulWidget {
+  final int secret, used, secs, score, position;
+  const _ResultDialog(
+      {required this.secret,
+      required this.used,
+      required this.secs,
+      required this.score,
+      required this.position});
+  @override
+  State<_ResultDialog> createState() => _ResultDialogState();
+}
+
+class _ResultDialogState extends State<_ResultDialog> {
+  final ConfettiController _left =
+      ConfettiController(duration: const Duration(seconds: 4));
+  final ConfettiController _right =
+      ConfettiController(duration: const Duration(seconds: 4));
+
+  @override
+  void initState() {
+    super.initState();
+    AppAudio.instance.success(); // música de vitória toca aqui
+    _left.play();
+    _right.play();
+  }
+
+  @override
+  void dispose() {
+    _left.dispose();
+    _right.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final s = S.of(context);
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        AlertDialog(
+          backgroundColor: const Color(0xFF0B6E4F),
+          title: Text('🎆 ${s.winTitle} 🎇'),
+          content: Text(
+            s.winBody(widget.secret, widget.used, widget.secs, widget.score) +
+                (widget.position > 0
+                    ? '\n#${widget.position} ${s.ranking}'
+                    : ''),
+          ),
+          actions: [
+            // Só um botão circular OK
+            Center(
+              child: FilledButton(
+                onPressed: () => Navigator.of(context).pop(),
+                style: FilledButton.styleFrom(
+                  shape: const CircleBorder(),
+                  padding: EdgeInsets.zero,
+                  minimumSize: const Size(56, 56),
+                  backgroundColor: Colors.white,
+                  foregroundColor: const Color(0xFF0B6E4F),
+                ),
+                child: const Icon(Icons.check, size: 24),
+              ),
+            ),
+          ],
+        ),
+        Align(
+          alignment: Alignment.topLeft,
+          child: ConfettiWidget(
+            confettiController: _left,
+            blastDirection: pi / 4,
+            emissionFrequency: 0.05,
+            numberOfParticles: 20,
+            gravity: 0.2,
+          ),
+        ),
+        Align(
+          alignment: Alignment.topRight,
+          child: ConfettiWidget(
+            confettiController: _right,
+            blastDirection: 3 * pi / 4,
+            emissionFrequency: 0.05,
+            numberOfParticles: 20,
+            gravity: 0.2,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// Pop-up de opções após o resultado (novo jogo, ranking, home)
+Future<String?> showOptionsPopup(BuildContext context) {
+  final s = S.of(context);
+  return showDialog<String>(
+    context: context,
+    barrierDismissible: false,
+    builder: (ctx) => AlertDialog(
+      backgroundColor: const Color(0xFF0B6E4F),
+      title: Text('🏆 ${s.winTitle}'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text('O que você deseja fazer?'),
+          const SizedBox(height: 16),
+        ],
+      ),
+      actions: [
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            FilledButton(
+              onPressed: () => Navigator.of(ctx).pop('again'),
+              child: Text(s.playAgain),
+            ),
+            const SizedBox(height: 8),
+            FilledButton(
+              onPressed: () => Navigator.of(ctx).pop('ranking'),
+              child: Text(s.viewRanking),
+            ),
+            const SizedBox(height: 8),
+            FilledButton(
+              onPressed: () => Navigator.of(ctx).pop('home'),
+              child: Text(s.home),
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
+
+// Pop-up de vitória antigo (mantido se precisar em outro lugar, mas não usado no novo fluxo)
 Future<String?> showWinPopup(BuildContext context,
     {required int secret,
     required int used,
