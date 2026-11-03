@@ -85,8 +85,15 @@ class _GameScreenState extends State<GameScreen> {
       case GuessResult.win:
         setState(() {});
         _ticker?.cancel();
+
+        // Popup para digitar o nome do recorde (campo começa vazio)
+        final nomeDigitado = await showNameInputPopup(context);
+        final nomeFinal = (nomeDigitado != null && nomeDigitado.isNotEmpty)
+            ? nomeDigitado
+            : 'Anônimo';
+
         final score = game.score();
-        final pos = await RankingStore.add(_levelId, widget.playerName, score);
+        final pos = await RankingStore.add(_levelId, nomeFinal, score);
         if (!mounted) return;
         final choice = await showWinPopup(context,
             secret: game.secret,
