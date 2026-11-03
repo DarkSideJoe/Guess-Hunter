@@ -18,7 +18,7 @@ class GameTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 32,
         fontWeight: FontWeight.bold,
         color: Colors.white,
@@ -60,7 +60,6 @@ class GuessHunterApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [Locale('pt'), Locale('en')],
-      // Se o idioma do celular não for português, usa inglês
       localeResolutionCallback: (locale, supported) {
         if (locale != null && locale.languageCode == 'pt') {
           return const Locale('pt');
