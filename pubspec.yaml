@@ -19,6 +19,7 @@ flutter:
   uses-material-design: true
   assets:
     - Assets/Audio/
+    - Assets/Images/
   fonts:
     - family: TitanOne
       fonts:
