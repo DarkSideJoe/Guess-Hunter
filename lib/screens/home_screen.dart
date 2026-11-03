@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../audio.dart';
 import '../game_logic.dart';
+import '../main.dart'; // importa o GameTitle
 import '../strings.dart';
 import 'game_screen.dart';
 import 'ranking_screen.dart';
@@ -30,13 +31,10 @@ class _HomeScreenState extends State<HomeScreen> {
     showDialog<void>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text(s.credits, textAlign: TextAlign.center),
+        title: GameTitle(s.appName),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(s.appName,
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 28, color: Color(0xFF3FA9F5))),
             const SizedBox(height: 16),
             Text(s.createdBy,
                 style: const TextStyle(fontSize: 16, color: Color(0xFF9FD3FF))),
@@ -65,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
     };
     return Scaffold(
       appBar: AppBar(
-        title: Text(s.appName),
+        title: GameTitle(s.appName),
         backgroundColor: Colors.transparent,
         actions: [
           ValueListenableBuilder<bool>(
