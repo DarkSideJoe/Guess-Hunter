@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../audio.dart';
 import '../game_logic.dart';
-import '../ranking_store.dart';
 import '../strings.dart';
 import 'game_screen.dart';
 import 'ranking_screen.dart';
@@ -13,35 +12,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final TextEditingController _name = TextEditingController();
-
   @override
   void initState() {
     super.initState();
     AppAudio.instance.startMusic();
-    RankingStore.lastName().then((n) {
-      if (mounted) setState(() => _name.text = n);
-    });
-  }
-
-  @override
-  void dispose() {
-    _name.dispose();
-    super.dispose();
   }
 
   void _start(Level level) async {
-    final s = S.of(context);
-    final name = _name.text.trim();
-    if (name.isEmpty) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(s.nameRequired)));
-      return;
-    }
-    await RankingStore.saveName(name);
     if (!mounted) return;
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (_) => GameScreen(level: level, playerName: name),
+      builder: (_) => GameScreen(level: level, playerName: ''),
     ));
   }
 
@@ -108,17 +88,6 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.all(24),
           child: ListView(
             children: [
-              Text(s.whoPlays, style: Theme.of(context).textTheme.titleLarge),
-              const SizedBox(height: 12),
-              TextField(
-                controller: _name,
-                maxLength: 16,
-                decoration: InputDecoration(
-                  hintText: s.nameHint,
-                  border: const OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 16),
               Text(s.pickLevel, style: Theme.of(context).textTheme.titleLarge),
               const SizedBox(height: 12),
               for (final e in levels.entries)
