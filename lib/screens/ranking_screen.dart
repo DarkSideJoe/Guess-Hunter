@@ -32,6 +32,16 @@ class _RankingScreenState extends State<RankingScreen> {
     if (mounted) setState(() => _entries = list);
   }
 
+  // Retorna a cor da medalha para as 3 primeiras colocações
+  Color _medalColor(int position) {
+    switch (position) {
+      case 1: return const Color(0xFFFFD700); // Ouro
+      case 2: return const Color(0xFFC0C0C0); // Prata
+      case 3: return const Color(0xFFCD7F32); // Bronze
+      default: return Colors.white;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
@@ -65,14 +75,24 @@ class _RankingScreenState extends State<RankingScreen> {
                   ? Center(child: Text(s.emptyRanking))
                   : ListView.builder(
                       itemCount: _entries.length,
-                      itemBuilder: (_, i) => ListTile(
-                        leading: CircleAvatar(child: Text('${i + 1}')),
-                        title: Text(_entries[i].name,
-                            style: const TextStyle(fontSize: 22)),
-                        trailing: Text('${_entries[i].points}',
-                            style: const TextStyle(
-                                fontSize: 22, fontWeight: FontWeight.bold)),
-                      ),
+                      itemBuilder: (_, i) {
+                        final position = i + 1;
+                        return ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor: _medalColor(position),
+                            child: Text('$position',
+                                style: TextStyle(
+                                  color: position <= 3 ? Colors.black : Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                )),
+                          ),
+                          title: Text(_entries[i].name,
+                              style: const TextStyle(fontSize: 22)),
+                          trailing: Text('${_entries[i].points}',
+                              style: const TextStyle(
+                                  fontSize: 22, fontWeight: FontWeight.bold)),
+                        );
+                      },
                     ),
             ),
           ],
