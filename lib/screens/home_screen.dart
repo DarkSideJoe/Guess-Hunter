@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../audio.dart';
 import '../game_logic.dart';
-import '../main.dart'; // importa o GameTitle
+import '../widgets/logo.dart'; // importa o GameLogo
 import '../strings.dart';
 import 'game_screen.dart';
 import 'ranking_screen.dart';
@@ -31,7 +31,9 @@ class _HomeScreenState extends State<HomeScreen> {
     showDialog<void>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: GameTitle(s.appName),
+        title: Text(s.appName,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 28, color: Color(0xFF3FA9F5))),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -63,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
     };
     return Scaffold(
       appBar: AppBar(
-        title: GameTitle(s.appName),
+        title: GameLogo(width: 60), // logo na AppBar, texto só se imagem falhar
         backgroundColor: Colors.transparent,
         actions: [
           ValueListenableBuilder<bool>(
