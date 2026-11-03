@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../audio.dart';
 import '../game_logic.dart';
-import '../widgets/logo.dart'; // importa o GameLogo
+import '../widgets/logo.dart';
 import '../strings.dart';
 import 'game_screen.dart';
 import 'ranking_screen.dart';
@@ -31,9 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
     showDialog<void>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text(s.appName,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 28, color: Color(0xFF3FA9F5))),
+        title: GameTitle(s.appName),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -54,6 +52,63 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // Botão estilizado para cada nível de dificuldade
+  Widget _buildLevelButton(Level level, String id, BuildContext context) {
+    final s = S.of(context);
+    final cfg = levelConfigs[level]!;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: const Color(0xFF4A90E2),
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.25),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Nome da dificuldade em destaque (branco com contorno preto)
+              Text(
+                s.levelName(id),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  foreground: Paint()
+                    ..style = PaintingStyle.stroke
+                    ..strokeWidth = 3
+                    ..color = Colors.black,
+                ),
+              ),
+              const SizedBox(height: 12),
+              // Características abaixo, menor
+              Text(
+                '${cfg.max}  •  ${cfg.attempts} ${s.attempts.toLowerCase()}',
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.white70,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
@@ -65,8 +120,9 @@ class _HomeScreenState extends State<HomeScreen> {
     };
     return Scaffold(
       appBar: AppBar(
-        title: GameLogo(width: 60), // logo na AppBar, texto só se imagem falhar
+        title: GameLogo(width: 120), // logo maior na AppBar
         backgroundColor: Colors.transparent,
+        centerTitle: true,
         actions: [
           ValueListenableBuilder<bool>(
             valueListenable: AppAudio.instance.muted,
@@ -85,29 +141,29 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(20),
           child: ListView(
             children: [
-              Text(s.pickLevel, style: Theme.of(context).textTheme.titleLarge),
-              const SizedBox(height: 12),
-              for (final e in levels.entries)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: FilledButton(
-                    onPressed: () => _start(e.key),
-                    child: Padding(
-                      padding: const EdgeInsets.all(14),
-                      child: Text(
-                        '${s.levelName(e.value)}  (0 - ${levelConfigs[e.key]!.max}, ${levelConfigs[e.key]!.attempts} ${s.attempts.toLowerCase()})',
-                        style: const TextStyle(fontSize: 18),
-                      ),
+              Text(
+                s.pickLevel,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
-                  ),
-                ),
-              const SizedBox(height: 8),
+              ),
+              const SizedBox(height: 24),
+              for (final e in levels.entries)
+                _buildLevelButton(e.key, e.value, context),
+              const SizedBox(height: 24),
               OutlinedButton(
                 onPressed: () => Navigator.of(context).push(
                     MaterialPageRoute(builder: (_) => const RankingScreen())),
+                style: OutlinedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 52),
+                  foregroundColor: Colors.white,
+                  side: const BorderSide(color: Colors.white, width: 2),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(12),
                   child: Text(s.ranking, style: const TextStyle(fontSize: 18)),
