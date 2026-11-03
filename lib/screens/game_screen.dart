@@ -165,9 +165,13 @@ class _GameScreenState extends State<GameScreen> {
                 Text(s.range,
                     style: const TextStyle(
                         fontSize: 20, color: Color(0xFF9FD3FF))),
-                Text('${game.low}  -  ${game.high}',
-                    style: const TextStyle(
-                        fontSize: 56, fontWeight: FontWeight.bold)),
+                Text(
+                  '${game.low}  -  ${game.high}',
+                  style: const TextStyle(
+                      fontSize: 56, fontWeight: FontWeight.bold),
+                  softWrap: false,
+                  overflow: TextOverflow.visible,
+                ),
                 const SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -184,29 +188,36 @@ class _GameScreenState extends State<GameScreen> {
                       style: const TextStyle(
                           fontSize: 18, color: Color(0xFFB3E5FC))),
                 ),
-                TextField(
-                  controller: _input,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 32),
-                  decoration: InputDecoration(
-                    hintText: s.guessHint,
-                    border: const OutlineInputBorder(),
-                  ),
-                  onSubmitted: (_) => _submit(),
-                ),
-                const SizedBox(height: 16),
-                SizedBox(
-                  width: double.infinity,
-                  child: FilledButton(
-                    onPressed: _submit,
-                    child: Padding(
-                      padding: const EdgeInsets.all(14),
-                      child: Text(s.guessButton,
-                          style: const TextStyle(fontSize: 22)),
+                Row(
+                  children: [
+                    Flexible(
+                      flex: 3,
+                      child: TextField(
+                        controller: _input,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(fontSize: 32),
+                        decoration: InputDecoration(
+                          hintText: s.guessHint,
+                          border: const OutlineInputBorder(),
+                        ),
+                        onSubmitted: (_) => _submit(),
+                      ),
                     ),
-                  ),
+                    const SizedBox(width: 12),
+                    Flexible(
+                      flex: 1,
+                      child: FilledButton(
+                        onPressed: _submit,
+                        child: Padding(
+                          padding: const EdgeInsets.all(14),
+                          child: Text(s.guessButton,
+                              style: const TextStyle(fontSize: 22)),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
