@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import '../main.dart'; // importa o GameTitle
+import '../widgets/game_title.dart'; // importa o GameTitle
 import 'home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -35,7 +35,7 @@ class _SplashScreenState extends State<SplashScreen> {
             // Nome do jogo em destaque (logo estilizado)
             const GameTitle('Guess Hunter'),
             const SizedBox(height: 40),
-            // Barra de loading (apenas visual, frisa o nome do jogo)
+            // Barra de loading (apenas visual)
             const CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF3FA9F5)),
               strokeWidth: 4,
