@@ -12,7 +12,7 @@ class GameTitle extends StatelessWidget {
       style: TextStyle(
         fontSize: 32,
         fontWeight: FontWeight.bold,
-        // Removido 'color: Colors.white' — não pode usar com foreground
+        // Apenas foreground — color não pode ser usado junto
         foreground: Paint()
           ..style = PaintingStyle.stroke
           ..strokeWidth = 3
