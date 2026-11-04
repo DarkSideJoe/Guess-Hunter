@@ -47,7 +47,9 @@ class _RankingScreenState extends State<RankingScreen> {
     final s = S.of(context);
     return Scaffold(
       appBar: AppBar(
-          title: Text(s.ranking), backgroundColor: Colors.transparent),
+        title: Text(s.ranking),
+        backgroundColor: Colors.transparent,
+      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -77,20 +79,68 @@ class _RankingScreenState extends State<RankingScreen> {
                       itemCount: _entries.length,
                       itemBuilder: (_, i) {
                         final position = i + 1;
+                        final entry = _entries[i];
                         return ListTile(
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 4,
+                          ),
                           leading: CircleAvatar(
                             backgroundColor: _medalColor(position),
                             child: Text('$position',
                                 style: TextStyle(
                                   color: position <= 3 ? Colors.black : Colors.white,
                                   fontWeight: FontWeight.bold,
+                                  fontSize: 18,
                                 )),
                           ),
-                          title: Text(_entries[i].name,
-                              style: const TextStyle(fontSize: 22)),
-                          trailing: Text('${_entries[i].points}',
-                              style: const TextStyle(
-                                  fontSize: 22, fontWeight: FontWeight.bold)),
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  entry.name,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Text(
+                                '${entry.points} pts',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFFFFD700),
+                                ),
+                              ),
+                            ],
+                          ),
+                          subtitle: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                '${entry.time}s',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Color(0xFF9FD3FF),
+                                ),
+                              ),
+                              Text(
+                                '${entry.attempts} tent.',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Color(0xFF9FD3FF),
+                                ),
+                              ),
+                            ],
+                          ),
+                          trailing: const Icon(
+                            Icons.chevron_right,
+                            color: Colors.white54,
+                          ),
                         );
                       },
                     ),
