@@ -87,10 +87,18 @@ class _GameScreenState extends State<GameScreen> {
         _ticker?.cancel();
 
         final score = game.score();
-        final pos = await RankingStore.add(_levelId, widget.playerName, score);
+
+        // 1. Salva no ranking com nome temporário vazio + todas as estatísticas
+        final pos = await RankingStore.add(
+          levelId: _levelId,
+          name: widget.playerName,
+          points: score,
+          time: game.seconds,
+          attempts: game.attemptsUsed,
+        );
         if (!mounted) return;
 
-        // 1. Tela de resultado com OK circular (música de vitória toca aqui)
+        // 2. Tela de resultado com OK circular (música de vitória toca aqui)
         await showResultPopup(context,
             secret: game.secret,
             used: game.attemptsUsed,
@@ -99,17 +107,17 @@ class _GameScreenState extends State<GameScreen> {
             position: pos);
         if (!mounted) return;
 
-        // 2. Se bateu recorde, grava o nome (música de vitória também toca)
+        // 3. Se bateu recorde, grava o nome (só depois das estatísticas)
         if (pos > 0) {
           final nomeDigitado = await showNameInputPopup(context);
           final nomeFinal = (nomeDigitado != null && nomeDigitado.isNotEmpty)
               ? nomeDigitado
               : 'Anônimo';
-          await RankingStore.saveName(nomeFinal);
+          await RankingStore.updateName(_levelId, pos, nomeFinal);
           if (!mounted) return;
         }
 
-        // 3. Tela com opções (novo jogo, ranking, home)
+        // 4. Tela com opções (novo jogo, ranking, home)
         final choice = await showOptionsPopup(context);
         _handleChoice(choice);
         break;
