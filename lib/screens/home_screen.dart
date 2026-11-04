@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../audio.dart';
 import '../game_logic.dart';
 import '../widgets/logo.dart';
-import '../widgets/game_title.dart'; // importa o GameTitle
+import '../widgets/game_title.dart';
 import '../strings.dart';
 import 'game_screen.dart';
 import 'ranking_screen.dart';
@@ -78,19 +78,33 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Nome da dificuldade em destaque (branco com contorno preto)
-              Text(
-                s.levelName(id),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  foreground: Paint()
-                    ..style = PaintingStyle.stroke
-                    ..strokeWidth = 3
-                    ..color = Colors.black,
-                ),
+              // Nome da dificuldade: preenchimento branco + contorno preto
+              Stack(
+                children: [
+                  // Texto de trás: contorno preto
+                  Text(
+                    s.levelName(id),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      foreground: Paint()
+                        ..style = PaintingStyle.stroke
+                        ..strokeWidth = 4
+                        ..color = Colors.black,
+                    ),
+                  ),
+                  // Texto da frente: preenchimento branco
+                  Text(
+                    s.levelName(id),
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 12),
               // Características abaixo, menor
