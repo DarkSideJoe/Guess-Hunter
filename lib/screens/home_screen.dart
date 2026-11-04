@@ -53,71 +53,66 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Botão estilizado para cada nível de dificuldade
+  // Botão estilizado para cada nível de dificuldade (agora clicável)
   Widget _buildLevelButton(Level level, String id, BuildContext context) {
     final s = S.of(context);
     final cfg = levelConfigs[level]!;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
-      child: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: const Color(0xFF4A90E2),
+      child: Material(
+        color: const Color(0xFF4A90E2),
+        borderRadius: BorderRadius.circular(16),
+        elevation: 2,
+        child: InkWell(
           borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.25),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Nome da dificuldade: preenchimento branco + contorno preto
-              Stack(
-                children: [
-                  // Texto de trás: contorno preto
-                  Text(
-                    s.levelName(id),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      foreground: Paint()
-                        ..style = PaintingStyle.stroke
-                        ..strokeWidth = 4
-                        ..color = Colors.black,
+          onTap: () => _start(level),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Nome da dificuldade: preenchimento branco + contorno preto
+                Stack(
+                  children: [
+                    // Texto de trás: contorno preto
+                    Text(
+                      s.levelName(id),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        foreground: Paint()
+                          ..style = PaintingStyle.stroke
+                          ..strokeWidth = 4
+                          ..color = Colors.black,
+                      ),
                     ),
-                  ),
-                  // Texto da frente: preenchimento branco
-                  Text(
-                    s.levelName(id),
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                    // Texto da frente: preenchimento branco
+                    Text(
+                      s.levelName(id),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              // Características abaixo, menor
-              Text(
-                '${cfg.max}  •  ${cfg.attempts} ${s.attempts.toLowerCase()}',
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.white70,
-                  fontWeight: FontWeight.w500,
+                  ],
                 ),
-              ),
-            ],
+                const SizedBox(height: 12),
+                // Características abaixo, menor
+                Text(
+                  '${cfg.max}  •  ${cfg.attempts} ${s.attempts.toLowerCase()}',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.white70,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -135,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
     };
     return Scaffold(
       appBar: AppBar(
-        title: GameLogo(width: 120), // logo maior na AppBar
+        title: GameLogo(width: 120),
         backgroundColor: Colors.transparent,
         centerTitle: true,
         actions: [
