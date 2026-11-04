@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import '../widgets/game_title.dart'; // importa o GameTitle
+import '../widgets/logo.dart'; // importa o GameLogo
 import 'home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -32,8 +32,8 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Nome do jogo em destaque (logo estilizado)
-            const GameTitle('Guess Hunter'),
+            // Logo do jogo conforme o idioma (texto só aparece se a imagem falhar)
+            const GameLogo(width: 200),
             const SizedBox(height: 40),
             // Barra de loading (apenas visual)
             const CircularProgressIndicator(
