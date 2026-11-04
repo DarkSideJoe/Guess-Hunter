@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../audio.dart';
 import '../game_logic.dart';
 import '../widgets/logo.dart';
+import '../widgets/game_title.dart'; // importa o GameTitle
 import '../strings.dart';
 import 'game_screen.dart';
 import 'ranking_screen.dart';
